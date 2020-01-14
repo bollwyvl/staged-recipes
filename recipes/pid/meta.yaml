@@ -1,0 +1,45 @@
+{% set name = "pid" %}
+{% set version = "2.2.5" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: 96eb7dba326b88f5164bc1afdc986c7793e0d32d7f62366256a3903c7b0614ef
+
+build:
+  noarch: python
+  number: 0
+  script: "{{ PYTHON }} -m pip install . -vv"
+
+requirements:
+  host:
+    - python
+    - pip
+  run:
+    - python
+
+test:
+  source_files:
+    - tests
+  requires:
+    - nose
+    - pytest
+  imports:
+    - pid
+  commands:
+    - pytest -k "not test_pid_already_locked_multi_process"
+
+
+about:
+  home: https://github.com/trbs/pid
+  license: Apache-2.0
+  license_family: APACHE
+  license_file: LICENSE
+  summary: 'Pidfile featuring stale detection and file-locking, can also be used as context-manager or decorator'
+
+extra:
+  recipe-maintainers:
+    - bollwyvl

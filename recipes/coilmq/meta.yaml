@@ -1,0 +1,51 @@
+{% set name = "CoilMQ" %}
+{% set version = "1.0.1" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  - url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+    sha256: 4cbfeb5ed2459df14902c1380157be6267702b1271682924cd316ccad8a29d1d
+  - url: https://raw.githubusercontent.com/hozn/coilmq/master/LICENSE.md
+    sha256: debe35974707cd44ad7122bb49c50e62cbd94c905bf887706b5febbe858e9552
+
+build:
+  noarch: python
+  number: 0
+  script: "{{ PYTHON }} -m pip install . -vv"
+
+requirements:
+  host:
+    - python
+    - pip
+  run:
+    - python-daemon
+    - pid
+    - wheel
+    - six
+    - click
+
+test:
+  imports:
+    - coilmq
+
+about:
+  home: https://github.com/hozn/coilmq
+  license: Apache-2.0
+  license_family: APACHE
+  license_file: LICENSE.md
+  summary: 'Lightweight Python STOMP message broker.'
+
+  description: |
+    CoilMQ is a simple, configurable STOMP message broker (aka STOMP server)
+    written in Python. This project is inspired by the simple design of the Ruby
+    stompserver project by Patrick Hurley and Lionel Bouton. The goal of this
+    project is to provide a well-tested and well-documented Python
+    implementation with a good set of built-in functionality and numerous paths
+    for extensibility.
+
+extra:
+  recipe-maintainers:
+    - bollwyvl

@@ -1,0 +1,68 @@
+{% set name = "lakesuperior" %}
+{% set version = "1.0.0a21" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: eaf1dc4f4abe669457bd83753cc85c49f7348117a27ba712e385ba7ba1f18e81
+
+build:
+  number: 0
+  script: "{{ PYTHON }} -m pip install . -vv"
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - cython
+  host:
+    - python
+    - pip
+  run:
+    - python
+    - coilmq
+    - flask
+    - hiyapyco
+    - pyyaml
+    - arrow
+    - click
+    - click-log
+    - cymem
+    - gevent
+    - gunicorn
+    - rdflib
+    - rdflib-jsonld
+    - requests
+    - requests-toolbelt
+    - sphinx_rtd_theme
+    - stomp.py
+
+test:
+  imports:
+    - lakesuperior
+
+about:
+  home: https://lakesuperior.readthedocs.io
+  license: Apache-2.0
+  license_family: APACHE
+  license_file: LICENSE
+  summary: 'Lakesuperior, an alternative Fedora Repository implementation'
+
+  # The remaining entries in this section are optional, but recommended.
+  description: |
+    Lakesuperior is a Linked Data repository software. It is capable of storing
+    and managing large volumes of files and their metadata regardless of their
+    format, size, ethnicity, gender identity or expression.
+
+    Lakesuperior is an alternative Fedora Repository implementation. Fedora is a
+    mature repository software system historically adopted by major cultural
+    heritage institutions which extends the Linked Data Platform protocol.
+  doc_url: https://lakesuperior.readthedocs.io
+  dev_url: https://github.com/scossu/lakesuperior/
+
+extra:
+  recipe-maintainers:
+    - bollwyvl

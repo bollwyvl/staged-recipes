@@ -1,0 +1,39 @@
+{% set name = "HiYaPyCo" %}
+{% set version = "0.4.15" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: ac966aabf64a0136b63f2754328568af9667f13a941b5a93c9fc91c73cc0a1b0
+
+build:
+  noarch: python
+  number: 0
+  script: "{{ PYTHON }} -m pip install . -vv"
+
+requirements:
+  host:
+    - python
+    - pip
+  run:
+    - python
+    - pyyaml
+    - jinja2
+
+test:
+  imports:
+    - hiyapyco
+
+about:
+  home: https://github.com/zerwes/hiyapyco
+  license: GPL-3.0
+  license_family: GPL
+  license_file: LICENSE
+  summary: 'A Hierarchical Yaml Python Config '
+
+extra:
+  recipe-maintainers:
+    - bollwyvl
