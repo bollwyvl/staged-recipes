@@ -12,9 +12,9 @@ if __name__ == "__main__":
 
     servers = ",".join(map(lambda s: '"{:s}"'.format(s), sys.argv[1:]))
     new_conf = re.sub(
-        r"KNOWN_SERVERS = \[(.*?)\]", 
-        "KNOWN_SERVERS =[{}]".format(servers), 
-        conf, 
+        r"^KNOWN_SERVERS = \[(.*?)\]",
+        "KNOWN_SERVERS =[{}]".format(servers),
+        conf,
         flags=re.M|re.S
     )
     conftest.write_text(new_conf)

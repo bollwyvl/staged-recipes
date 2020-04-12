@@ -1,5 +1,10 @@
 {% set name = "jupyter-lsp" %}
 {% set version = "0.8.0" %}
+{% set build_number = "0" %}
+
+{% set py_spec = ">=3.5" %}
+{% set lab_spec = ">=2,<3.0.0a0" %}
+{% set ext_spec = "@krassowski/jupyterlab-lsp@^1.0.0" %}
 
 package:
   name: {{ name }}
@@ -11,58 +16,87 @@ source:
 
 build:
   noarch: python
-  number: 0
+  number: {{ build_number }}
+
+requirements:
+  host:
+    - python {{ py_spec }}
+    - pip
+  run:
+    - python {{ py_spec }}
+
+test:
+  commands:
+    - echo 'top-level tests -- TODO'
 
 outputs:
   - name: {{ name }}
-    script: build_base.bat  # [win]
-    script: build_base.sh  # [not win]
+    build:
+      number: {{ build_number }}
+      noarch: python
+      script:
+        - $PYTHON -m pip install . --no-deps -vv  # [not win]
+        - %PYTHON% -m pip install . --no-deps -vv  # [win]
     requirements:
       host:
-        - python
         - pip
+        - python {{ py_spec }}
       run:
         - notebook >=4.3.1
-        - python
+        - python {{ py_spec }}
         - setuptools
     test:  # Seems ignored by conda-build
       requires:
-        - jupyterlab =2
-        - nodejs >=8,<13
+        - jupyterlab {{ lab_spec }}
+        - nodejs >=10
+        - pip
       commands:
-        - jupyter labextension install @krassowski/jupyterlab-lsp@^1.0.0
+        - python -m pip check
+        - jupyter labextension install {{ ext_spec }}
         - python -m jupyterlab.browser_check
+
   - name: {{ name }}-python
     build:
+      number: {{ build_number }}
+      noarch: python
     requirements:
       run:
         - {{ pin_subpackage(name, exact=True) }}
-        - python-language-server
+        # this combo appease pip-check, a canary for broken entry_points
+        # (used extensively by python-language-server and jupyter-lsp)
+        # in the future, this should hopefully be mostly handled by upstreams
+        - python-language-server >=0.31.9
+        - wrapt >=1.11,<=1.12.0a0
     test:
-      files:
-        - modify_conftest.py
       requires:
-        - jupyterlab ~=2.0
+        - jupyterlab {{ lab_spec }}
+        - pip
         - pytest-asyncio
         - pytest-runner
       commands:
-        - python modify_conftest.py pyls
+        - python -m pip check
+        - python {{ RECIPE_DIR }}/modify_conftest.py pyls # [not win]
+        - python {{ RECIPE_DIR }}\modify_conftest.py pyls # [win]
         - pytest -vv -p no:warnings --pyargs jupyter_lsp
+
   - name: {{ name }}-r
     build:
+      noarch: python
+      number: {{ build_number }}
     requirements:
       run:
         - {{ pin_subpackage(name, exact=True) }}
-        - r-languageserver
+        - r-languageserver >=0.3.5,<0.4.0a0
     test:
-      files:
-        - modify_conftest.py
       requires:
-        - jupyterlab ~=2.0
+        - jupyterlab {{ lab_spec }}
+        - pip
         - pytest-asyncio
         - pytest-runner
       commands:
-        - python modify_conftest.py
+        - python -m pip check
+        - python {{ RECIPE_DIR }}/modify_conftest.py  # [not win]
+        - python {{ RECIPE_DIR }}\modify_conftest.py  # [win]
         - pytest -vv -p no:warnings --pyargs jupyter_lsp
 
 about:
@@ -72,6 +106,7 @@ about:
   license_file: LICENSE
   summary: Multi-Language Server WebSocket proxy for Jupyter notebook or lab server for Python 3.5+.
   doc_url: https://jupyterlab-lsp.readthedocs.io
+  doc_source_url: https://github.com/krassowski/jupyterlab-lsp/blob/v{{ version }}/docs
 
 extra:
   recipe-maintainers:
