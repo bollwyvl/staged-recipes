@@ -78,6 +78,8 @@ outputs:
         - python {{ RECIPE_DIR }}/modify_conftest.py pyls # [not win]
         - python {{ RECIPE_DIR }}\modify_conftest.py pyls # [win]
         - pytest -vv -p no:warnings --pyargs jupyter_lsp
+    about:
+      summary: A metapackage for jupyter-lsp and python-language-server
 
   - name: {{ name }}-r
     build:
@@ -98,6 +100,8 @@ outputs:
         - python {{ RECIPE_DIR }}/modify_conftest.py  # [not win]
         - python {{ RECIPE_DIR }}\modify_conftest.py  # [win]
         - pytest -vv -p no:warnings --pyargs jupyter_lsp
+    about:
+      summary: A metapackage jupyter-lsp and r-languageserver
 
 about:
   home: https://github.com/krassowski/jupyterlab-lsp
