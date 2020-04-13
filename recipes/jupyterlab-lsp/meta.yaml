@@ -7,7 +7,7 @@
 {% set ext_spec = "@krassowski/jupyterlab-lsp@^1.0.0" %}
 
 package:
-  name: {{ name }}
+  name: {{ name }}-suite  # To avoid issue https://github.com/conda/conda-build/issues/3933
   version: {{ version }}
 
 source:
@@ -45,7 +45,7 @@ outputs:
         - notebook >=4.3.1
         - python {{ py_spec }}
         - setuptools
-    test:  # Seems ignored by conda-build
+    test:
       requires:
         - jupyterlab {{ lab_spec }}
         - nodejs >=10
@@ -88,7 +88,7 @@ outputs:
     requirements:
       run:
         - {{ pin_subpackage(name, exact=True) }}
-        - r-languageserver >=0.3.5,<0.4.0a0
+        - r-languageserver >=0.3.5
     test:
       requires:
         - jupyterlab {{ lab_spec }}
