@@ -6,6 +6,9 @@
 {% set lab_spec = ">=2,<3.0.0a0" %}
 {% set ext_spec = "@krassowski/jupyterlab-lsp@^1.0.0" %}
 
+# List of jupyter_lsp py.tests ran for each known servers
+{% set server_tests = "start_known or listener" %}
+
 package:
   name: {{ name }}-suite  # To avoid issue https://github.com/conda/conda-build/issues/3933
   version: {{ version }}
@@ -75,9 +78,7 @@ outputs:
         - pytest-runner
       commands:
         - python -m pip check
-        - python {{ RECIPE_DIR }}/modify_conftest.py pyls # [not win]
-        - python {{ RECIPE_DIR }}\modify_conftest.py pyls # [win]
-        - pytest -vv -p no:warnings --pyargs jupyter_lsp
+        - pytest -vv -p no:warnings --pyargs jupyter_lsp -k "not ({{ server_tests }}) or pyls"
     about:
       summary: A metapackage for jupyter-lsp and python-language-server
 
@@ -97,9 +98,7 @@ outputs:
         - pytest-runner
       commands:
         - python -m pip check
-        - python {{ RECIPE_DIR }}/modify_conftest.py  # [not win]
-        - python {{ RECIPE_DIR }}\modify_conftest.py  # [win]
-        - pytest -vv -p no:warnings --pyargs jupyter_lsp
+        - pytest -vv -p no:warnings --pyargs jupyter_lsp -k "not ({{ server_tests }}) or r-languageserver"
     about:
       summary: A metapackage jupyter-lsp and r-languageserver
 
