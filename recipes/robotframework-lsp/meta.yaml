@@ -1,0 +1,56 @@
+{% set name = "robotframework-lsp" %}
+{% set version = "0.3.1" %}
+
+package:
+  name: {{ name }}
+  version: {{ version }}
+
+source:
+  - url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+    sha256: c79d6ca2b400d8bbe066a394fbe2a403ae1c0af348c9f29be56a48f9d7584cad
+    patches:
+      - 001-readme-dir.patch
+  - url: https://raw.githubusercontent.com/robocorp/{{ name }}/{{ name }}-{{ version }}/LICENSE
+    sha256: d7fe8144657d8a37e5965f9788aeabd582bf92f49cc4b614ffc56951e2cc7841
+  - url: https://raw.githubusercontent.com/robocorp/robotframework-lsp/{{ name }}-{{ version }}/robotframework-ls/README.md
+    sha256: fb7ecb213028a77f7f28fc23adf844a468cd4c0cbda80455d355ca8eb268d322
+  - url: https://raw.githubusercontent.com/robocorp/robotframework-lsp/{{ name }}-{{ version }}/ThirdPartyNotices.txt
+    sha256: 6b6ec865230379e428a4476c67a4e73582f73c44b23d42ff02a71214e4e5c8ff
+
+build:
+  number: 0
+  noarch: python
+  script: {{ PYTHON }} -m pip install . -vv
+  entry_points:
+    - robotframework_ls = robotframework_ls.__main__:main
+
+requirements:
+  host:
+    - pip
+    - python >=3.7
+  run:
+    - python >=3.7
+    - robotframework >=3.2
+  run_constrained:
+    - robotframework-seleniumlibary >=4.4
+
+test:
+  imports:
+    - robotframework_ls
+    - robotframework_debug_adapter
+  commands:
+    - pip check
+  requires:
+    - pip
+
+about:
+  home: https://github.com/robocorp/robotframework-lsp
+  summary: Language Server Protocol implementation for Robot Framework
+  license: Apache-2.0
+  license_file:
+    - LICENSE
+    - ThirdPartyNotices.txt
+
+extra:
+  recipe-maintainers:
+    - bollwyvl
