@@ -1,0 +1,43 @@
+{% set version = "3.7.3" %}
+{% set subversion = "15968" %}
+
+package:
+  name: iphreeqc
+  version: {{ version }}
+
+source:
+  - url: https://water.usgs.gov/water-resources/software/PHREEQC/Phreeqc_UserRightsNotice.txt
+    sha256: a54cf33b74d70150a47334e2c9b0bc3f0c42a01c7c5dbbb8f3117cb30a2e111c
+  # TODO: win
+  - url: https://water.usgs.gov/water-resources/software/PHREEQC/iphreeqc-{{ version }}-{{ subversion }}.tar.gz
+    sha256: 8ad26c75e9060949291c450119d54ed69f352223592d79bc7a5f2512c9656f74
+
+build:
+  number: 0
+  skip: true  # [win]
+
+requirements:
+  build:
+    - cmake
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+  host:
+    - python
+  run:
+    - python
+
+test:
+  commands:
+    - ls
+
+about:
+  home: https://www.usgs.gov/software/phreeqc-version-3
+  summary: 'Modules Based on the Geochemical Model PHREEQC for Use in Scripting and Programming Languages'
+  license: CC0
+  license_file: Phreeqc_UserRightsNotice.txt
+  doc_url: https://simplejson.readthedocs.io/
+  dev_url: https://water.usgs.gov/water-resources/software/PHREEQC/
+
+extra:
+  recipe-maintainers:
+    - bollwyvl
