@@ -70,6 +70,5 @@ about:
   dev_url: https://{{ gomodule }}
 
 extra:
-  feedstock-name: go-ipfs
   recipe-maintainers:
     - bollwyvl
